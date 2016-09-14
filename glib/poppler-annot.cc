@@ -585,6 +585,12 @@ _poppler_annot_artwork3d_new (Annot *annot)
   return poppler_annot;
 }
 
+PopplerArtwork3D *
+poppler_annot_artwork3d_get_artwork3d (PopplerAnnotArtwork3D *poppler_annot)
+{
+  return poppler_annot->artwork3d;
+}
+
 static void
 poppler_annot_screen_finalize (GObject *object)
 {

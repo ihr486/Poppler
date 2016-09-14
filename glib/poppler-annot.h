@@ -297,6 +297,10 @@ void                          poppler_annot_square_set_interior_color          (
 										PopplerColor       *poppler_color);
 PopplerColor                 *poppler_annot_square_get_interior_color          (PopplerAnnotSquare *poppler_annot);
 
+/* PopplerAnnotArtwork3D */
+GType                         poppler_annot_artwork3d_get_type                 (void) G_GNUC_CONST;
+PopplerArtwork3D             *poppler_annot_artwork3d_get_artwork3d            (PopplerAnnotArtwork3D *poppler_annot);
+
 G_END_DECLS
 
 #endif /* __POPPLER_ANNOT_H__ */

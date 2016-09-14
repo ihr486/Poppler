@@ -18,6 +18,7 @@
 #include <CairoOutputDev.h>
 #include <FileSpec.h>
 #include <StructElement.h>
+#include <Artwork3D.h>
 #endif
 
 struct _PopplerDocument

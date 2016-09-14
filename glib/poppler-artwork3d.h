@@ -1,4 +1,7 @@
-/* poppler-artwork3d.h: glib interface to Artwork3D
+/* poppler-artwork3d.h: glib interface to Artwork3D (adapted from poppler-media.h)
+ *
+ * Copyright (C) 2010 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2016 Hiroka Ihara <ihara@eidos.ic.i.u-tokyo.ac.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +30,10 @@ G_BEGIN_DECLS
 #define POPPLER_ARTWORK3D(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ARTWORK3D, PopplerArtwork3D))
 #define POPPLER_IS_ARTWORK3D(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ARTWORK3D))
 
-GType   poppler_artwork3d_get_type  (void) G_GNUC_CONST;
+GType    poppler_artwork3d_get_type  (void) G_GNUC_CONST;
+gboolean poppler_artwork3d_save      (PopplerArtwork3D *artwork3d,
+                                      const char *filename,
+                                      GError *error);
 
 G_END_DECLS
 
