@@ -204,6 +204,8 @@ typedef struct _PopplerQuadrilateral       PopplerQuadrilateral;
 typedef struct _PopplerStructureElement    PopplerStructureElement;
 typedef struct _PopplerStructureElementIter PopplerStructureElementIter;
 typedef struct _PopplerTextSpan            PopplerTextSpan;
+typedef struct _PopplerAnnotArtwork3D      PopplerAnnotArtwork3D;
+typedef struct _PopplerArtwork3D           PopplerArtwork3D;
 
 /**
  * PopplerBackend:
@@ -238,5 +240,6 @@ G_END_DECLS
 #include "poppler-movie.h"
 #include "poppler-media.h"
 #include "poppler-structure-element.h"
+#include "poppler-artwork3d.h"
 
 #endif /* __POPPLER_GLIB_H__ */

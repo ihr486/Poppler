@@ -1,0 +1,39 @@
+/* Artwork3D.h - Intermediate buffer for 3DD objects
+ * Copyright (C) 2006-2007, Pino Toscano <pino@kde.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+ */
+
+#ifndef Artwork3D_H
+#define Artwork3D_H
+
+enum Artwork3DKind {
+  artwork3d_UnknownKind,
+  artwork3d_U3D,
+  artwork3d_PRC
+};
+
+class Artwork3D
+{
+  Object *streamObj;
+public:
+  Artwork3D(Object *obj);
+  ~Artwork3D();
+  Stream *getStream();
+  Artwork3D *copy();
+  Artwork3DKind getKind();
+};
+
+#endif

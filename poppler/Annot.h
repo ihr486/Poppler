@@ -57,6 +57,7 @@ class Movie;
 class LinkAction;
 class Sound;
 class FileSpec;
+class Artwork3D;
 
 enum AnnotLineEndingStyle {
   annotLineEndingSquare,        // Square
@@ -1403,11 +1404,14 @@ public:
 
   // getters
 
+  Artwork3D *getArtwork() const;
+
 private:
 
   void initialize(PDFDoc *docA, Dict *dict);
 
   Activation *activation;  // 3DA
+  Artwork3D *artwork;    // 3DD
 };
 
 //------------------------------------------------------------------------

@@ -40,6 +40,7 @@ typedef struct _PopplerAnnotScreenClass         PopplerAnnotScreenClass;
 typedef struct _PopplerAnnotLineClass           PopplerAnnotLineClass;
 typedef struct _PopplerAnnotCircleClass         PopplerAnnotCircleClass;
 typedef struct _PopplerAnnotSquareClass         PopplerAnnotSquareClass;
+typedef struct _PopplerAnnotArtwork3DClass      PopplerAnnotArtwork3DClass;
 
 struct _PopplerAnnotClass
 {
@@ -150,6 +151,18 @@ struct _PopplerAnnotSquareClass
   PopplerAnnotMarkupClass parent_class;
 };
 
+struct _PopplerAnnotArtwork3D
+{
+  PopplerAnnot parent_instance;
+
+  PopplerArtwork3D *artwork3d;
+};
+
+struct _PopplerAnnotArtwork3DClass
+{
+  PopplerAnnotClass parent_class;
+};
+
 G_DEFINE_TYPE (PopplerAnnot, poppler_annot, G_TYPE_OBJECT)
 G_DEFINE_TYPE (PopplerAnnotMarkup, poppler_annot_markup, POPPLER_TYPE_ANNOT)
 G_DEFINE_TYPE (PopplerAnnotTextMarkup, poppler_annot_text_markup, POPPLER_TYPE_ANNOT_MARKUP)
@@ -161,6 +174,7 @@ G_DEFINE_TYPE (PopplerAnnotScreen, poppler_annot_screen, POPPLER_TYPE_ANNOT)
 G_DEFINE_TYPE (PopplerAnnotLine, poppler_annot_line, POPPLER_TYPE_ANNOT_MARKUP)
 G_DEFINE_TYPE (PopplerAnnotCircle, poppler_annot_circle, POPPLER_TYPE_ANNOT_MARKUP)
 G_DEFINE_TYPE (PopplerAnnotSquare, poppler_annot_square, POPPLER_TYPE_ANNOT_MARKUP)
+G_DEFINE_TYPE (PopplerAnnotArtwork3D, poppler_annot_artwork3d, POPPLER_TYPE_ANNOT)
 
 static PopplerAnnot *
 _poppler_create_annot (GType annot_type, Annot *annot)
@@ -528,6 +542,45 @@ _poppler_annot_movie_new (Annot *annot)
   poppler_annot = _poppler_create_annot (POPPLER_TYPE_ANNOT_MOVIE, annot);
   annot_movie = static_cast<AnnotMovie *>(poppler_annot->annot);
   POPPLER_ANNOT_MOVIE (poppler_annot)->movie = _poppler_movie_new (annot_movie->getMovie());
+
+  return poppler_annot;
+}
+
+static void
+poppler_annot_artwork3d_finalize (GObject *object)
+{
+  PopplerAnnotArtwork3D *annot_artwork3d = POPPLER_ANNOT_ARTWORK3D (object);
+
+  if (annot_artwork3d->artwork3d) {
+    g_object_unref (annot_artwork3d->artwork3d);
+    annot_artwork3d->artwork3d = NULL;
+  }
+
+  G_OBJECT_CLASS (poppler_annot_artwork3d_parent_class)->finalize (object);
+}
+
+static void
+poppler_annot_artwork3d_init (PopplerAnnotArtwork3D *poppler_annot)
+{
+}
+
+static void
+poppler_annot_artwork3d_class_init (PopplerAnnotArtwork3DClass *klass)
+{
+  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+  gobject_class->finalize = poppler_annot_artwork3d_finalize;
+}
+
+PopplerAnnot *
+_poppler_annot_artwork3d_new (Annot *annot)
+{
+  PopplerAnnot *poppler_annot;
+  Annot3D *annot3d;
+
+  poppler_annot = _poppler_create_annot (POPPLER_TYPE_ANNOT_ARTWORK3D, annot);
+  annot3d = static_cast<Annot3D *>(poppler_annot->annot);
+  POPPLER_ANNOT_ARTWORK3D (poppler_annot)->artwork3d = _poppler_artwork3d_new (annot3d->getArtwork());
 
   return poppler_annot;
 }

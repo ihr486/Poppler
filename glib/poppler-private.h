@@ -134,6 +134,8 @@ PopplerAnnot      *_poppler_annot_screen_new (PopplerDocument *doc, Annot *annot
 PopplerAnnot      *_poppler_annot_line_new (Annot *annot);
 PopplerAnnot      *_poppler_annot_circle_new (Annot *annot);
 PopplerAnnot      *_poppler_annot_square_new (Annot *annot);
+PopplerAnnot      *_poppler_annot_artwork3d_new (Annot *annot);
+PopplerArtwork3D  *_poppler_artwork3d_new (Artwork3D *artwork3d);
 
 char *_poppler_goo_string_to_utf8(GooString *s);
 gboolean _poppler_convert_pdf_date_to_gtime (GooString *date,

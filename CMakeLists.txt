@@ -396,6 +396,7 @@ set(poppler_SRCS
   poppler/XpdfPluginAPI.cc
   poppler/Movie.cc
   poppler/Rendition.cc
+  poppler/Artwork3D.cc
 )
 set(poppler_LIBS ${FREETYPE_LIBRARIES})
 if(ENABLE_SPLASH)
@@ -582,6 +583,7 @@ if(ENABLE_XPDF_HEADERS)
     poppler/UTF8.h
     poppler/XpdfPluginAPI.h
     poppler/Sound.h
+    poppler/Artwork3D.h
     ${CMAKE_CURRENT_BINARY_DIR}/poppler/poppler-config.h
     DESTINATION include/poppler)
   install(FILES
