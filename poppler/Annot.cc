@@ -6615,21 +6615,15 @@ void Annot3D::initialize(PDFDoc *docA, Dict* dict) {
   obj1.free();
 
   if (dict->lookup("3DD", &obj1)->isStream()) {
-    printf("3DD is a stream.\n");
     artwork = new Artwork3D(&obj1);
   } else if(obj1.isDict()) {
-    printf("3DD is a reference dictionary.\n");
-    
     Object obj2;
     if (obj1.getDict()->lookup("3DD", &obj2)->isStream()) {
-      printf("3DD found by tracking a reference.\n");
       artwork = new Artwork3D(&obj2);
     }
     obj2.free();
   }
   obj1.free();
-
-  printf("Annot3D initialized.\n");
 }
 
 Annot3D::Activation::Activation(Dict *dict) {

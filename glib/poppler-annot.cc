@@ -549,7 +549,7 @@ _poppler_annot_movie_new (Annot *annot)
 static void
 poppler_annot_artwork3d_finalize (GObject *object)
 {
-  PopplerAnnotArtwork3D *annot_artwork3d = POPPLER_ANNOT_ARTWORK3D (object);
+  PopplerAnnotArtwork3D *annot_artwork3d = POPPLER_ANNOT_3D (object);
 
   if (annot_artwork3d->artwork3d) {
     g_object_unref (annot_artwork3d->artwork3d);
@@ -578,9 +578,9 @@ _poppler_annot_artwork3d_new (Annot *annot)
   PopplerAnnot *poppler_annot;
   Annot3D *annot3d;
 
-  poppler_annot = _poppler_create_annot (POPPLER_TYPE_ANNOT_ARTWORK3D, annot);
+  poppler_annot = _poppler_create_annot (POPPLER_TYPE_ANNOT_3D, annot);
   annot3d = static_cast<Annot3D *>(poppler_annot->annot);
-  POPPLER_ANNOT_ARTWORK3D (poppler_annot)->artwork3d = _poppler_artwork3d_new (annot3d->getArtwork());
+  POPPLER_ANNOT_3D (poppler_annot)->artwork3d = _poppler_artwork3d_new (annot3d->getArtwork());
 
   return poppler_annot;
 }

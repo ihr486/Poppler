@@ -1416,7 +1416,10 @@ poppler_page_get_annot_mapping (PopplerPage *page)
       case Annot::typeSquiggly:
       case Annot::typeStrikeOut:
         mapping->annot = _poppler_annot_text_markup_new (annot);
-        break;
+  break;
+      case Annot::type3D:
+        mapping->annot = _poppler_annot_artwork3d_new (annot);
+  break;
       default:
         mapping->annot = _poppler_annot_new (annot);
 	break;

@@ -73,9 +73,9 @@ G_BEGIN_DECLS
 #define POPPLER_ANNOT_SQUARE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ANNOT_SQUARE, PopplerAnnotSquare))
 #define POPPLER_IS_ANNOT_SQUARE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ANNOT_SQUARE))
 
-#define POPPLER_TYPE_ANNOT_ARTWORK3D         (poppler_annot_artwork3d_get_type ())
-#define POPPLER_ANNOT_ARTWORK3D(obj)         (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ANNOT_ARTWORK3D, PopplerAnnotArtwork3D))
-#define POPPLER_IS_ANNOT_ARTWORK3D(obj)      (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ANNOT_ARTWORK3D))
+#define POPPLER_TYPE_ANNOT_3D         (poppler_annot_artwork3d_get_type ())
+#define POPPLER_ANNOT_3D(obj)         (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ANNOT_3D, PopplerAnnotArtwork3D))
+#define POPPLER_IS_ANNOT_3D(obj)      (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ANNOT_3D))
 
 typedef enum
 {

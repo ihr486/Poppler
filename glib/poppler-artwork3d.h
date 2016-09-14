@@ -33,7 +33,7 @@ G_BEGIN_DECLS
 GType    poppler_artwork3d_get_type  (void) G_GNUC_CONST;
 gboolean poppler_artwork3d_save      (PopplerArtwork3D *artwork3d,
                                       const char *filename,
-                                      GError *error);
+                                      GError **error);
 
 G_END_DECLS
 
