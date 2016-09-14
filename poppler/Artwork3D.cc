@@ -1,6 +1,5 @@
 /* Artwork3D.cc - Intermediate buffer for 3DD binary object (adapted from Sound.cc)
  * Copyright (C) 2006-2007, Pino Toscano <pino@kde.org>
- * Copyright (C) 2016, Hiroka Ihara <ihara@eidos.ic.i.u-tokyo.ac.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
