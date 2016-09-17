@@ -217,6 +217,7 @@ poppler_include_HEADERS =	\
 	UTF.h			\
 	UTF8.h			\
 	XpdfPluginAPI.h		\
+    Artwork3d.h \
 	Sound.h
 nodist_poppler_include_HEADERS = poppler-config.h
 
@@ -294,6 +295,7 @@ libpoppler_la_SOURCES =		\
 	PageLabelInfo.cc	\
 	SecurityHandler.cc	\
 	Sound.cc		\
+    Artwork3D.cc \
 	XpdfPluginAPI.cc
 
 libpoppler_la_CPPFLAGS =			\

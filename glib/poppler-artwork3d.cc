@@ -79,10 +79,44 @@ _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
   return artwork3d;
 }
 
+#define BUF_SIZE (1024)
+
 gboolean
-poppler_artwork3d_save (PopplerArtwork3D *artwork3d,
-                        const char *filename,
-                        GError **error)
+poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
+                                    PopplerArtwork3DSaveFunc save_func,
+                                    gpointer user_data,
+                                    GError **error)
+{
+  gchar buf[BUF_SIZE];
+
+  g_return_val_if_fail (POPPLER_IS_ARTWORK3D (artwork3d), FALSE);
+  g_return_val_if_fail (artwork3d->stream != NULL, FALSE);
+
+  artwork3d->stream->reset ();
+
+  while (1) {
+    gsize i;
+    for (i = 0; i < BUF_SIZE; i++) {
+      buf[i] = artwork3d->stream->getChar ();
+      if (buf[i] == EOF) {
+        artwork3d->stream->close ();
+        return save_func (buf, i, user_data, error);
+      }
+    }
+    if (!save_func (buf, BUF_SIZE, user_data, error)) {
+      artwork3d->stream->close();
+      return FALSE;
+    }
+  }
+
+  artwork3d->stream->close ();
+  return TRUE;
+}
+
+gboolean
+poppler_artwork3d_save_to_file (PopplerArtwork3D *artwork3d,
+                                const char *filename,
+                                GError **error)
 {
   gboolean result = TRUE;
   FILE *f;

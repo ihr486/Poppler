@@ -29,10 +29,19 @@ G_BEGIN_DECLS
 #define POPPLER_ARTWORK3D(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ARTWORK3D, PopplerArtwork3D))
 #define POPPLER_IS_ARTWORK3D(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ARTWORK3D))
 
-GType    poppler_artwork3d_get_type  (void) G_GNUC_CONST;
-gboolean poppler_artwork3d_save      (PopplerArtwork3D *artwork3d,
-                                      const char *filename,
-                                      GError **error);
+typedef gboolean (*PopplerArtwork3DSaveFunc) (const gchar *buf,
+                                              gsize count,
+                                              gpointer data,
+                                              GError **error);
+
+GType    poppler_artwork3d_get_type         (void) G_GNUC_CONST;
+gboolean poppler_artwork3d_save_to_file     (PopplerArtwork3D *artwork3d,
+                                             const char *filename,
+                                             GError **error);
+gboolean poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
+                                             PopplerArtwork3DSaveFunc save_func,
+                                             gpointer user_data,
+                                             GError *error);
 
 G_END_DECLS
 
