@@ -41,7 +41,7 @@ gboolean poppler_artwork3d_save_to_file     (PopplerArtwork3D *artwork3d,
 gboolean poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
                                              PopplerArtwork3DSaveFunc save_func,
                                              gpointer user_data,
-                                             GError *error);
+                                             GError **error);
 
 G_END_DECLS
 
