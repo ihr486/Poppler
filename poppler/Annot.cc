@@ -6602,6 +6602,8 @@ Annot3D::Annot3D(PDFDoc *docA, Dict *dict, Object *obj) :
 Annot3D::~Annot3D() {
   if (activation)
     delete activation;
+  if (artwork)
+    delete artwork;
 }
 
 void Annot3D::initialize(PDFDoc *docA, Dict* dict) {
@@ -6622,6 +6624,8 @@ void Annot3D::initialize(PDFDoc *docA, Dict* dict) {
       artwork = new Artwork3D(&obj2);
     }
     obj2.free();
+  } else {
+    artwork = NULL;
   }
   obj1.free();
 }
