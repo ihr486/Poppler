@@ -1,5 +1,6 @@
 /* Artwork3D.cc - Intermediate buffer for 3DD binary object (adapted from Sound.cc)
  * Copyright (C) 2006-2007, Pino Toscano <pino@kde.org>
+ * Copyright (C) 2016, Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,17 +21,24 @@
 #include "Artwork3D.h"
 #include "Stream.h"
 
-Artwork3D::Artwork3D(Object *obj)
+Artwork3D::Artwork3D(Object *streamObj, Object *viewObj)
 {
-  streamObj = new Object();
-  streamObj->initNull();
-  obj->copy(streamObj);
+  this->streamObj = new Object();
+  this->streamObj->initNull();
+  streamObj->copy(this->streamObj);
+  this->viewObj = new Object();
+  this->viewObj->initNull();
+  if (viewObj != NULL) {
+    viewObj->copy(this->viewObj);
+  }
 }
 
 Artwork3D::~Artwork3D()
 {
   streamObj->free();
   delete streamObj;
+  viewObj->free();
+  delete viewObj;
 }
 
 Stream *Artwork3D::getStream()
@@ -38,9 +46,14 @@ Stream *Artwork3D::getStream()
   return streamObj->getStream();
 }
 
+Object *Artwork3D::getView()
+{
+  return viewObj;
+}
+
 Artwork3D *Artwork3D::copy()
 {
-  Artwork3D *newartwork = new Artwork3D(streamObj);
+  Artwork3D *newartwork = new Artwork3D(streamObj, viewObj);
 
   return newartwork;
 }
@@ -59,4 +72,3 @@ Artwork3DKind Artwork3D::getKind()
   obj1.free();
   return artwork3d_UnknownKind;
 }
-

@@ -26,6 +26,7 @@
 // Copyright (C) 2012, 2015 Tobias Koenig <tokoe@kdab.com>
 // Copyright (C) 2013 Thomas Freitag <Thomas.Freitag@alfa.de>
 // Copyright (C) 2013 Adrian Johnson <ajohnson@redneon.com>
+// Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -89,7 +90,7 @@ public:
 
   double getX() const { return x; }
   double getY() const { return y; }
-  
+
 protected:
 
   double x, y;
@@ -116,7 +117,7 @@ protected:
 
   void parsePathArray(Array *array);
 };
-  
+
 //------------------------------------------------------------------------
 // AnnotCalloutLine
 //------------------------------------------------------------------------
@@ -131,7 +132,7 @@ public:
   double getY1() const { return coord1.getY(); }
   double getX2() const { return coord2.getX(); }
   double getY2() const { return coord2.getY(); }
-  
+
 protected:
 
   AnnotCoord coord1, coord2;
@@ -590,7 +591,7 @@ public:
   void setBorder(AnnotBorder *new_border); // Takes ownership
 
   // The annotation takes the ownership of
-  // new_color. 
+  // new_color.
   void setColor(AnnotColor *new_color);
 
   void setAppearanceState(const char *state);
@@ -655,7 +656,7 @@ protected:
   Object annotObj;
 
   int refCnt;
-  
+
   // required data
   AnnotSubtype type;                // Annotation type
   PDFRectangle *rect;               // Rect
@@ -680,7 +681,7 @@ protected:
   GooString *appearBuf;
   AnnotBorder *border;          // Border, BS
   AnnotColor *color;            // C
-  double fontSize; 
+  double fontSize;
   GBool ok;
 
   bool hasRef;
@@ -1024,7 +1025,7 @@ protected:
 
   // required
   AnnotCoord *coord1, *coord2;
-  
+
   // optional
   // inherited  from Annot
   // AnnotBorderBS border;          // BS
@@ -1065,7 +1066,7 @@ public:
 protected:
 
   void initialize(PDFDoc *docA, Dict *dict);
-  
+
   AnnotQuadrilaterals *quadrilaterals; // QuadPoints
 };
 
@@ -1388,7 +1389,7 @@ class Annot3D: public Annot {
 
     Activation(Dict *dict);
   private:
-    
+
     ActivationATrigger aTrigger;  // A   (Default XA)
     ActivationAState aState;      // AIS (Default L)
     ActivationDTrigger dTrigger;  // D   (Default PI)
@@ -1411,7 +1412,7 @@ private:
   void initialize(PDFDoc *docA, Dict *dict);
 
   Activation *activation;  // 3DA
-  Artwork3D *artwork;    // 3DD
+  Artwork3D *artwork;    // 3DD, and 3DV if present
 };
 
 //------------------------------------------------------------------------

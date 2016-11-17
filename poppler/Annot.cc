@@ -35,6 +35,7 @@
 // Copyright (C) 2015 Petr Gajdos <pgajdos@suse.cz>
 // Copyright (C) 2015 Philipp Reinkemeier <philipp.reinkemeier@offis.de>
 // Copyright (C) 2015 Tamas Szekeres <szekerest@gmail.com>
+// Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -138,7 +139,7 @@ AnnotLineEndingStyle parseAnnotLineEndingStyle(GooString *string) {
     }
   } else {
     return annotLineEndingNone;
-  }  
+  }
 }
 
 const char* convertAnnotLineEndingStyle(AnnotLineEndingStyle style) {
@@ -564,9 +565,9 @@ GBool AnnotBorder::parseDashArray(Object *dashObj) {
 
 AnnotBorder::~AnnotBorder() {
   if (dash)
-    gfree (dash); 
+    gfree (dash);
 }
-  
+
 //------------------------------------------------------------------------
 // AnnotBorderArray
 //------------------------------------------------------------------------
@@ -612,7 +613,7 @@ AnnotBorderArray::AnnotBorderArray(Array *array) {
   } else {
     correct = gFalse;
   }
-  
+
   if (!correct) {
     width = 0;
   }
@@ -1437,7 +1438,7 @@ void Annot::update(const char *key, Object *value) {
   }
 
   annotObj.dictSet(const_cast<char*>(key), value);
-  
+
   xref->setModifiedObject(&annotObj, ref);
 }
 
@@ -1447,7 +1448,7 @@ void Annot::setContents(GooString *new_content) {
 
   if (new_content) {
     contents = new GooString(new_content);
-    //append the unicode marker <FE FF> if needed	
+    //append the unicode marker <FE FF> if needed
     if (!contents->hasUnicodeMarker()) {
       contents->insert(0, 0xff);
       contents->insert(0, 0xfe);
@@ -1455,7 +1456,7 @@ void Annot::setContents(GooString *new_content) {
   } else {
     contents = new GooString();
   }
-  
+
   Object obj1;
   obj1.initString(contents->copy());
   update ("Contents", &obj1);
@@ -1656,7 +1657,7 @@ void Annot::decRefCnt() {
 
 Annot::~Annot() {
   annotObj.free();
-  
+
   delete rect;
   delete contents;
 
@@ -3947,7 +3948,7 @@ AnnotWidget::AnnotWidget(PDFDoc *docA, Dict *dict, Object *obj, FormField *field
 AnnotWidget::~AnnotWidget() {
   if (appearCharacs)
     delete appearCharacs;
-  
+
   if (action)
     delete action;
 
@@ -4280,7 +4281,7 @@ void AnnotWidget::drawText(GooString *text, GooString *da, GfxResources *resourc
   //~ if there is no MK entry, this should use the existing content stream,
   //~ and only replace the marked content portion of it
   //~ (this is only relevant for Tx fields)
-  
+
   // parse the default appearance string
   tfPos = tmPos = -1;
   if (da) {
@@ -6616,17 +6617,21 @@ void Annot3D::initialize(PDFDoc *docA, Dict* dict) {
   }
   obj1.free();
 
+  Object obj2;
+  dict->lookup("3DV", &obj2);
+
   if (dict->lookup("3DD", &obj1)->isStream()) {
-    artwork = new Artwork3D(&obj1);
+    artwork = new Artwork3D(&obj1, &obj2);
   } else if(obj1.isDict()) {
-    Object obj2;
-    if (obj1.getDict()->lookup("3DD", &obj2)->isStream()) {
-      artwork = new Artwork3D(&obj2);
+    Object obj3;
+    if (obj1.getDict()->lookup("3DD", &obj3)->isStream()) {
+      artwork = new Artwork3D(&obj3, &obj2);
     }
-    obj2.free();
+    obj3.free();
   } else {
     artwork = NULL;
   }
+  obj2.free();
   obj1.free();
 }
 
@@ -7139,7 +7144,7 @@ Annots::Annots(PDFDoc *docA, int page, Object *annotsObj) {
 
   if (annotsObj->isArray()) {
     for (i = 0; i < annotsObj->arrayGetLength(); ++i) {
-      //get the Ref to this annot and pass it to Annot constructor 
+      //get the Ref to this annot and pass it to Annot constructor
       //this way, it'll be possible for the annot to retrieve the corresponding
       //form widget
       Object obj2;
@@ -7269,7 +7274,7 @@ Annot *Annots::createAnnot(Dict* dict, Object *obj) {
         annot = new AnnotPopup(doc, dict, obj);
       else
         annot = NULL;
-      
+
       obj2.free();
     } else {
       annot = new Annot(doc, dict, obj);

@@ -1,5 +1,6 @@
 /* Artwork3D.h - Intermediate buffer for 3DD objects (adapted from Sound.h)
  * Copyright (C) 2006-2007, Pino Toscano <pino@kde.org>
+ * Copyright (C) 2016, Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,11 +28,12 @@ enum Artwork3DKind {
 
 class Artwork3D
 {
-  Object *streamObj;
+  Object *streamObj, *viewObj;
 public:
-  Artwork3D(Object *obj);
+  Artwork3D(Object *streamObj, Object *viewObj);
   ~Artwork3D();
   Stream *getStream();
+  Object *getView();
   Artwork3D *copy();
   Artwork3DKind getKind();
 };

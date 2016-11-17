@@ -30,6 +30,7 @@ struct _PopplerArtwork3D
   GObject parent_instance;
 
   Stream *stream;
+  Object *view;
 };
 
 struct _PopplerArtwork3DClass
@@ -43,11 +44,6 @@ static void
 poppler_artwork3d_finalize (GObject *object)
 {
   PopplerArtwork3D *artwork3d = POPPLER_ARTWORK3D (object);
-
-  if (artwork3d->stream) {
-    artwork3d->stream->decRef();
-    artwork3d->stream = NULL;
-  }
 
   G_OBJECT_CLASS (poppler_artwork3d_parent_class)->finalize (object);
 }
@@ -75,6 +71,7 @@ _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
   artwork3d = POPPLER_ARTWORK3D (g_object_new (POPPLER_TYPE_ARTWORK3D, NULL));
 
   artwork3d->stream = poppler_artwork3d->getStream();
+  artwork3d->view = poppler_artwork3d->getView();
 
   return artwork3d;
 }
@@ -97,11 +94,12 @@ poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
   while (1) {
     gsize i;
     for (i = 0; i < BUF_SIZE; i++) {
-      buf[i] = artwork3d->stream->getChar ();
-      if (buf[i] == EOF) {
+      int c = artwork3d->stream->getChar ();
+      if (c == EOF) {
         artwork3d->stream->close ();
         return save_func (buf, i, user_data, error);
       }
+      buf[i] = c;
     }
     if (!save_func (buf, BUF_SIZE, user_data, error)) {
       artwork3d->stream->close();
