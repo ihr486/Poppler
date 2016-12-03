@@ -1,6 +1,5 @@
-/* poppler-artwork3d.h: glib interface to Artwork3D (adapted from poppler-media.h)
+/* poppler-artwork3d.h: glib interface to Artwork3D
  *
- * Copyright (C) 2010 Carlos Garcia Campos <carlosgc@gnome.org>
  * Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -70,6 +69,8 @@ typedef struct _PopplerView3D PopplerView3D;
 
 struct _PopplerView3D
 {
+  GObject parent_instance;
+
   gchar *external_name;
   gchar *internal_name;
   PopplerView3DMatrixMode matrix_mode;

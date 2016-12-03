@@ -184,7 +184,7 @@ double Artwork3D::View3D::getOrbitCenter()
 
 const char *Artwork3D::Projection3D::getSubType()
 {
-  return getCStringProperty(&projectionObj, "SubType");
+  return getCStringProperty(&projectionObj, "Subtype");
 }
 
 const char *Artwork3D::Projection3D::getClippingStyle()

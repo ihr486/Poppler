@@ -1,6 +1,6 @@
-/* poppler-artwork3d.cc: glib interface to Artwork3D (adapted from poppler-media.cc)
+/* poppler-artwork3d.cc: glib interface to Artwork3D
  *
- * Copyright (C) 2010 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,15 @@ struct _PopplerArtwork3DClass
   GObjectClass parent_class;
 };
 
+typedef struct _PopplerView3DClass PopplerView3DClass;
+
+struct _PopplerView3DClass
+{
+  GObjectClass parent_class;
+};
+
 G_DEFINE_TYPE (PopplerArtwork3D, poppler_artwork3d, G_TYPE_OBJECT);
+G_DEFINE_TYPE (PopplerView3D, poppler_view3d, G_TYPE_OBJECT);
 
 static void
 poppler_artwork3d_finalize (GObject *object)
@@ -60,6 +68,31 @@ poppler_artwork3d_init (PopplerArtwork3D *artwork3d)
 {
 }
 
+static void
+poppler_view3d_finalize (GObject *object)
+{
+  PopplerView3D *view3d = POPPLER_VIEW3D (object);
+
+  g_free (view3d->external_name);
+  g_free (view3d->internal_name);
+  g_free (view3d->view_path);
+
+  G_OBJECT_CLASS (poppler_view3d_parent_class)->finalize (object);
+}
+
+static void
+poppler_view3d_class_init (PopplerView3DClass *klass)
+{
+  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+  gobject_class->finalize = poppler_view3d_finalize;
+}
+
+static void
+poppler_view3d_init (PopplerView3D *view3d)
+{
+}
+
 PopplerArtwork3D *
 _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
 {
@@ -72,6 +105,102 @@ _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
   artwork3d->artwork = poppler_artwork3d;
 
   return artwork3d;
+}
+
+PopplerView3D *
+_poppler_view3d_new (Artwork3D::View3D *poppler_view3d)
+{
+  PopplerView3D *view3d;
+
+  g_assert (poppler_view3d != NULL);
+
+  view3d = POPPLER_VIEW3D (g_object_new (POPPLER_TYPE_VIEW3D, NULL));
+
+  view3d->external_name = g_strdup (poppler_view3d->getExternalName());
+  view3d->internal_name = g_strdup (poppler_view3d->getInternalName());
+  view3d->matrix_mode = POPPLER_VIEW3D_MATRIX_MODE_U3DPATH;
+  const char *MS = poppler_view3d->getMatrixSelection();
+  if (MS != NULL && !strcmp (MS, "M")) {
+    view3d->matrix_mode = POPPLER_VIEW3D_MATRIX_MODE_EXPLICIT;
+    poppler_view3d->getTransform(view3d->transform);
+  }
+  view3d->view_path = g_strdup (poppler_view3d->getViewNodePath());
+  view3d->orbit_center = poppler_view3d->getOrbitCenter();
+
+  view3d->projection.subtype = POPPLER_PROJECTION3D_SUBTYPE_PERSPECTIVE;
+  view3d->projection.clipping_style = POPPLER_PROJECTION3D_CLIPPING_STYLE_AUTOMATIC;
+  view3d->projection.scaling_mode = POPPLER_PROJECTION3D_SCALING_MODE_VIEWPORT_WIDTH;
+  Artwork3D::Projection3D *poppler_projection3d = poppler_view3d->getProjection();
+  if (poppler_projection3d != NULL) {
+    const char *Subtype = poppler_projection3d->getSubType();
+    if (Subtype != NULL && !strcmp(Subtype, "O")) {
+      view3d->projection.subtype = POPPLER_PROJECTION3D_SUBTYPE_ORTHOGONAL;
+    }
+    const char *CS = poppler_projection3d->getClippingStyle();
+    if (CS != NULL && !strcmp(CS, "XNF")) {
+      view3d->projection.clipping_style = POPPLER_PROJECTION3D_CLIPPING_STYLE_EXPLICIT;
+    }
+    view3d->projection.far_clipping = poppler_projection3d->getFarClippingDistance();
+    view3d->projection.near_clipping = poppler_projection3d->getNearClippingDistance();
+    view3d->projection.field_of_view = poppler_projection3d->getFieldOfView();
+    if (view3d->projection.subtype == POPPLER_PROJECTION3D_SUBTYPE_PERSPECTIVE) {
+      const char *PS = poppler_projection3d->getPerspectiveScalingType();
+      if (PS != NULL && !strcmp(PS, "H")) {
+        view3d->projection.scaling_mode = POPPLER_PROJECTION3D_SCALING_MODE_VIEWPORT_HEIGHT;
+      } else if (PS != NULL && !strcmp(PS, "Min")) {
+        view3d->projection.scaling_mode = POPPLER_PROJECTION3D_SCALING_MODE_VIEWPORT_MIN;
+      } else if (PS != NULL && !strcmp(PS, "Max")) {
+        view3d->projection.scaling_mode = POPPLER_PROJECTION3D_SCALING_MODE_VIEWPORT_MAX;
+      } else if (PS != NULL && !strcmp(PS, "V")) {
+        view3d->projection.scaling_mode = POPPLER_PROJECTION3D_SCALING_MODE_EXPLICIT;
+        view3d->projection.scaling_value = poppler_projection3d->getPerspectiveScalingValue();
+      }
+    } else {
+      view3d->projection.scaling_value = poppler_projection3d->getOrthogonalScalingValue();
+    }
+  }
+
+  return view3d;
+}
+
+PopplerView3D *
+poppler_artwork3d_get_default_view (PopplerArtwork3D *artwork3d)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_view3d_new (artwork3d->artwork->getDefaultView());
+}
+
+PopplerView3D *
+poppler_artwork3d_get_first_view (PopplerArtwork3D *artwork3d)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_view3d_new (artwork3d->artwork->getFirstView());
+}
+
+PopplerView3D *
+poppler_artwork3d_get_last_view (PopplerArtwork3D *artwork3d)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_view3d_new (artwork3d->artwork->getLastView());
+}
+
+PopplerView3D *
+poppler_artwork3d_get_view_by_internal_name (PopplerArtwork3D *artwork3d, const gchar *name)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_view3d_new (artwork3d->artwork->getView(name));
+}
+
+PopplerView3D *
+poppler_artwork3d_get_view_by_array_index (PopplerArtwork3D *artwork3d, int index)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_view3d_new (artwork3d->artwork->getView(index));
 }
 
 #define BUF_SIZE (1024)
