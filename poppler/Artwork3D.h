@@ -1,5 +1,4 @@
-/* Artwork3D.h - Intermediate buffer for 3DD objects (adapted from Sound.h)
- * Copyright (C) 2006-2007, Pino Toscano <pino@kde.org>
+/* Artwork3D.h - Intermediate buffer for 3DD objects
  * Copyright (C) 2016, Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,22 +19,56 @@
 #ifndef Artwork3D_H
 #define Artwork3D_H
 
-enum Artwork3DKind {
-  artwork3d_UnknownKind,
-  artwork3d_U3D,
-  artwork3d_PRC
-};
-
 class Artwork3D
 {
-  Object *streamObj, *viewObj;
 public:
-  Artwork3D(Object *streamObj, Object *viewObj);
+  enum Artwork3DKind {
+    artwork3d_UnknownKind,
+    artwork3d_U3D,
+    artwork3d_PRC
+  };
+  class Projection3D
+  {
+    Object projectionObj;
+  public:
+    Projection3D(Object *_projectionObj);
+    ~Projection3D();
+    const char *getSubType();
+    const char *getClippingStyle();
+    double getFarClippingDistance();
+    double getNearClippingDistance();
+    double getFieldOfView();
+    const char *getPerspectiveScalingType();
+    double getPerspectiveScalingValue();
+    double getOrthogonalScalingValue();
+  };
+  class View3D
+  {
+    Object viewObj;
+    Projection3D *projection;
+  public:
+    View3D(Object *_viewObj);
+    ~View3D();
+    const char *getExternalName();
+    const char *getInternalName();
+    const char *getMatrixSelection();
+    bool getTransform(double m[12]);
+    const char *getViewNodePath();
+    double getOrbitCenter();
+    Projection3D *getProjection();
+  };
+  Artwork3D(Object *_streamObj, Object *_viewObj);
   ~Artwork3D();
   Stream *getStream();
-  Object *getView();
   Artwork3D *copy();
   Artwork3DKind getKind();
+  View3D *getDefaultView();
+  View3D *getView(int index);
+  View3D *getView(const char *name);
+  View3D *getFirstView();
+  View3D *getLastView();
+private:
+  Object streamObj, viewObj;
 };
 
 #endif

@@ -29,8 +29,7 @@ struct _PopplerArtwork3D
 {
   GObject parent_instance;
 
-  Stream *stream;
-  Object *view;
+  Artwork3D *artwork;
 };
 
 struct _PopplerArtwork3DClass
@@ -70,8 +69,7 @@ _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
 
   artwork3d = POPPLER_ARTWORK3D (g_object_new (POPPLER_TYPE_ARTWORK3D, NULL));
 
-  artwork3d->stream = poppler_artwork3d->getStream();
-  artwork3d->view = poppler_artwork3d->getView();
+  artwork3d->artwork = poppler_artwork3d;
 
   return artwork3d;
 }
@@ -87,27 +85,30 @@ poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
   gchar buf[BUF_SIZE];
 
   g_return_val_if_fail (POPPLER_IS_ARTWORK3D (artwork3d), FALSE);
-  g_return_val_if_fail (artwork3d->stream != NULL, FALSE);
 
-  artwork3d->stream->reset ();
+  Stream *stream = artwork3d->artwork->getStream();
+
+  g_return_val_if_fail (stream != NULL, FALSE);
+
+  stream->reset ();
 
   while (1) {
     gsize i;
     for (i = 0; i < BUF_SIZE; i++) {
-      int c = artwork3d->stream->getChar ();
+      int c = stream->getChar ();
       if (c == EOF) {
-        artwork3d->stream->close ();
+        stream->close ();
         return save_func (buf, i, user_data, error);
       }
       buf[i] = c;
     }
     if (!save_func (buf, BUF_SIZE, user_data, error)) {
-      artwork3d->stream->close();
+      stream->close();
       return FALSE;
     }
   }
 
-  artwork3d->stream->close ();
+  stream->close ();
   return TRUE;
 }
 
@@ -120,7 +121,10 @@ poppler_artwork3d_save_to_file (PopplerArtwork3D *artwork3d,
   FILE *f;
 
   g_return_val_if_fail (POPPLER_IS_ARTWORK3D (artwork3d), FALSE);
-  g_return_val_if_fail (artwork3d->stream != NULL, FALSE);
+
+  Stream *stream = artwork3d->artwork->getStream();
+
+  g_return_val_if_fail (stream != NULL, FALSE);
 
   f = g_fopen (filename, "wb");
 
@@ -136,9 +140,9 @@ poppler_artwork3d_save_to_file (PopplerArtwork3D *artwork3d,
     return FALSE;
   }
 
-  artwork3d->stream->reset ();
+  stream->reset ();
   while(1) {
-    int data = artwork3d->stream->getChar ();
+    int data = stream->getChar ();
     if (data == EOF) break;
     if (fputc (data, f) == EOF) {
       g_set_error (error,
@@ -150,7 +154,7 @@ poppler_artwork3d_save_to_file (PopplerArtwork3D *artwork3d,
       break;
     }
   }
-  artwork3d->stream->close ();
+  stream->close ();
 
   if (fclose (f) < 0)
   {

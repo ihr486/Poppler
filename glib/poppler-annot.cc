@@ -3,6 +3,7 @@
  * Copyright (C) 2007 Inigo Martinez <inigomartinez@gmail.com>
  * Copyright (C) 2009 Carlos Garcia Campos <carlosgc@gnome.org>
  * Copyright (C) 2013 German Poo-Caamano <gpoo@gnome.org>
+ * Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -775,7 +776,7 @@ poppler_annot_square_new (PopplerDocument  *doc,
  * Gets the type of @poppler_annot
  *
  * Return value: #PopplerAnnotType of @poppler_annot.
- **/ 
+ **/
 PopplerAnnotType
 poppler_annot_get_annot_type (PopplerAnnot *poppler_annot)
 {
@@ -878,7 +879,7 @@ poppler_annot_set_contents (PopplerAnnot *poppler_annot,
   GooString *goo_tmp;
   gchar *tmp;
   gsize length = 0;
-  
+
   g_return_if_fail (POPPLER_IS_ANNOT (poppler_annot));
 
   tmp = contents ? g_convert (contents, -1, "UTF-16BE", "UTF-8", NULL, &length, NULL) : NULL;
@@ -982,7 +983,7 @@ create_poppler_color_from_annot_color (AnnotColor *color)
       {
       case AnnotColor::colorGray:
         poppler_color = g_new (PopplerColor, 1);
-	
+
         poppler_color->red = (guint16) (values[0] * 65535);
         poppler_color->green = poppler_color->red;
         poppler_color->blue = poppler_color->red;
@@ -990,7 +991,7 @@ create_poppler_color_from_annot_color (AnnotColor *color)
 	break;
       case AnnotColor::colorRGB:
         poppler_color = g_new (PopplerColor, 1);
-	
+
         poppler_color->red = (guint16) (values[0] * 65535);
         poppler_color->green = (guint16) (values[1] * 65535);
         poppler_color->blue = (guint16) (values[2] * 65535);
@@ -1357,7 +1358,7 @@ poppler_annot_markup_get_opacity (PopplerAnnotMarkup *poppler_annot)
   g_return_val_if_fail (POPPLER_IS_ANNOT_MARKUP (poppler_annot), 0);
 
   annot = static_cast<AnnotMarkup *>(POPPLER_ANNOT (poppler_annot)->annot);
-  
+
   return annot->getOpacity ();
 }
 
@@ -1458,7 +1459,7 @@ poppler_annot_markup_get_reply_to (PopplerAnnotMarkup *poppler_annot)
   g_return_val_if_fail (POPPLER_IS_ANNOT_MARKUP (poppler_annot), POPPLER_ANNOT_MARKUP_REPLY_TYPE_R);
 
   annot = static_cast<AnnotMarkup *>(POPPLER_ANNOT (poppler_annot)->annot);
-  
+
   switch (annot->getReplyTo ())
   {
     case AnnotMarkup::replyTypeR:
@@ -1630,7 +1631,7 @@ poppler_annot_text_set_icon (PopplerAnnotText *poppler_annot,
  * Retrieves the state of @poppler_annot.
  *
  * Return value: #PopplerAnnotTextState of @poppler_annot.
- **/ 
+ **/
 PopplerAnnotTextState
 poppler_annot_text_get_state (PopplerAnnotText *poppler_annot)
 {
@@ -1723,7 +1724,7 @@ poppler_annot_text_markup_get_quadrilaterals (PopplerAnnotTextMarkup *poppler_an
  * Retrieves the justification of the text of @poppler_annot.
  *
  * Return value: #PopplerAnnotFreeTextQuadding of @poppler_annot.
- **/ 
+ **/
 PopplerAnnotFreeTextQuadding
 poppler_annot_free_text_get_quadding (PopplerAnnotFreeText *poppler_annot)
 {
@@ -1879,7 +1880,7 @@ poppler_annot_callout_line_copy (PopplerAnnotCalloutLine *callout)
   PopplerAnnotCalloutLine *new_callout;
 
   g_return_val_if_fail (callout != NULL, NULL);
-  
+
   new_callout = g_new0 (PopplerAnnotCalloutLine, 1);
   *new_callout = *callout;
 
