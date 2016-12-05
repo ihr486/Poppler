@@ -159,6 +159,34 @@ _poppler_view3d_new (Artwork3D::View3D *poppler_view3d)
       view3d->projection.scaling_value = poppler_projection3d->getOrthogonalScalingValue();
     }
   }
+  view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_ARTWORK;
+  Artwork3D::LightingScheme3D *poppler_lighting3d = poppler_view3d->getLightingScheme();
+  if (poppler_lighting3d != NULL) {
+    const char *Subtype = poppler_lighting3d->getSubType();
+    if (Subtype != NULL && !strcmp(Subtype, "None")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_NONE;
+    } else if (Subtype != NULL && !strcmp(Subtype, "White")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_WHITE;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Day")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_DAY;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Night")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_NIGHT;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Hard")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_HARD;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Primary")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_PRIMARY;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Blue")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_BLUE;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Red")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_RED;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Cube")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_CUBE;
+    } else if (Subtype != NULL && !strcmp(Subtype, "CAD")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_CAD;
+    } else if (Subtype != NULL && !strcmp(Subtype, "Headlamp")) {
+      view3d->lighting.subtype = POPPLER_LIGHTINGSCHEME3D_SUBTYPE_HEADLAMP;
+    }
+  }
 
   return view3d;
 }

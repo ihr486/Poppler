@@ -59,6 +59,29 @@ struct _PopplerProjection3D
   gdouble scaling_value;
 };
 
+typedef enum _PopplerLightingScheme3DSubType
+{
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_ARTWORK,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_NONE,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_WHITE,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_DAY,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_NIGHT,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_HARD,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_PRIMARY,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_BLUE,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_RED,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_CUBE,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_CAD,
+  POPPLER_LIGHTINGSCHEME3D_SUBTYPE_HEADLAMP
+} PopplerLightingScheme3DSubType;
+
+typedef struct _PopplerLightingScheme3D PopplerLightingScheme3D;
+
+struct _PopplerLightingScheme3D
+{
+  PopplerLightingScheme3DSubType subtype;
+};
+
 typedef enum _PopplerView3DMatrixMode
 {
   POPPLER_VIEW3D_MATRIX_MODE_EXPLICIT,
@@ -78,6 +101,7 @@ struct _PopplerView3D
   gchar *view_path;
   gdouble orbit_center;
   PopplerProjection3D projection;
+  PopplerLightingScheme3D lighting;
 };
 
 #define POPPLER_TYPE_VIEW3D       (poppler_view3d_get_type ())
@@ -103,6 +127,11 @@ gboolean poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
                                              PopplerArtwork3DSaveFunc save_func,
                                              gpointer user_data,
                                              GError **error);
+PopplerView3D *poppler_artwor3d_get_first_view (PopplerArtwork3D *artwork3d);
+PopplerView3D *poppler_artwork3d_get_last_view (PopplerArtwork3D *artwork3d);
+PopplerView3D *poppler_artwork3d_get_default_view (PopplerArtwork3D *artwork3d);
+PopplerView3D *poppler_artwork3d_get_view_by_array_index (PopplerArtwork3D *artwork3d, int index);
+PopplerView3D *poppler_artwork3d_get_view_by_internal_name (PopplerArtwork3D *artwork3d, const char *name);
 
 G_END_DECLS
 

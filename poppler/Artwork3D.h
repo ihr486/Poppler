@@ -42,10 +42,19 @@ public:
     double getPerspectiveScalingValue();
     double getOrthogonalScalingValue();
   };
+  class LightingScheme3D
+  {
+    Object lightingObj;
+  public:
+    LightingScheme3D(Object *_lightingObj);
+    ~LightingScheme3D();
+    const char *getSubType();
+  };
   class View3D
   {
     Object viewObj;
     Projection3D *projection;
+    LightingScheme3D *lighting;
   public:
     View3D(Object *_viewObj);
     ~View3D();
@@ -56,6 +65,7 @@ public:
     const char *getViewNodePath();
     double getOrbitCenter();
     Projection3D *getProjection();
+    LightingScheme3D *getLightingScheme();
   };
   Artwork3D(Object *_streamObj, Object *_viewObj);
   ~Artwork3D();

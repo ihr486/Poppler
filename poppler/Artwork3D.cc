@@ -70,6 +70,7 @@ Artwork3D::View3D::View3D(Object *_viewObj)
   viewObj.initNull();
   _viewObj->copy(&viewObj);
   projection = NULL;
+  lighting = NULL;
   if (_viewObj->isDict()) {
     Object obj1;
     _viewObj->getDict()->lookup("P", &obj1);
@@ -77,6 +78,10 @@ Artwork3D::View3D::View3D(Object *_viewObj)
       projection = new Projection3D(&obj1);
     }
     obj1.free();
+    _viewObj->getDict()->lookup("LS", &obj1);
+    if (obj1.isDict()) {
+      lighting = new LightingScheme3D(&obj1);
+    }
   }
 }
 
@@ -97,9 +102,25 @@ Artwork3D::Projection3D::~Projection3D()
   projectionObj.free();
 }
 
+Artwork3D::LightingScheme3D::LightingScheme3D(Object *_lightingObj)
+{
+  lightingObj.initNull();
+  _lightingObj->copy(&lightingObj);
+}
+
+Artwork3D::LightingScheme3D::~LightingScheme3D()
+{
+  lightingObj.free();
+}
+
 Artwork3D::Projection3D *Artwork3D::View3D::getProjection()
 {
   return projection;
+}
+
+Artwork3D::LightingScheme3D *Artwork3D::View3D::getLightingScheme()
+{
+  return lighting;
 }
 
 static const char *getCStringProperty(Object *obj, const char *name)
@@ -110,6 +131,20 @@ static const char *getCStringProperty(Object *obj, const char *name)
     obj->getDict()->lookup(name, &obj1);
     if (obj1.isString()) {
       ret = obj1.getString()->getCString();
+    }
+    obj1.free();
+  }
+  return ret;
+}
+
+static const char *getNameProperty(Object *obj, const char *name)
+{
+  const char *ret = NULL;
+  if (obj->isDict()) {
+    Object obj1;
+    obj->getDict()->lookup(name, &obj1);
+    if (obj1.isName()) {
+      ret = obj1.getName();
     }
     obj1.free();
   }
@@ -142,7 +177,7 @@ const char *Artwork3D::View3D::getInternalName()
 
 const char *Artwork3D::View3D::getMatrixSelection()
 {
-  return getCStringProperty(&viewObj, "MS");
+  return getNameProperty(&viewObj, "MS");
 }
 
 const char *Artwork3D::View3D::getViewNodePath()
@@ -184,12 +219,12 @@ double Artwork3D::View3D::getOrbitCenter()
 
 const char *Artwork3D::Projection3D::getSubType()
 {
-  return getCStringProperty(&projectionObj, "Subtype");
+  return getNameProperty(&projectionObj, "Subtype");
 }
 
 const char *Artwork3D::Projection3D::getClippingStyle()
 {
-  return getCStringProperty(&projectionObj, "CS");
+  return getNameProperty(&projectionObj, "CS");
 }
 
 double Artwork3D::Projection3D::getFarClippingDistance()
@@ -209,7 +244,7 @@ double Artwork3D::Projection3D::getFieldOfView()
 
 const char *Artwork3D::Projection3D::getPerspectiveScalingType()
 {
-  return getCStringProperty(&projectionObj, "PS");
+  return getNameProperty(&projectionObj, "PS");
 }
 
 double Artwork3D::Projection3D::getPerspectiveScalingValue()
@@ -220,6 +255,11 @@ double Artwork3D::Projection3D::getPerspectiveScalingValue()
 double Artwork3D::Projection3D::getOrthogonalScalingValue()
 {
   return getNumberProperty(&projectionObj, "OS");
+}
+
+const char *Artwork3D::LightingScheme3D::getSubType()
+{
+  return getNameProperty(&lightingObj, "Subtype");
 }
 
 Artwork3D::View3D *Artwork3D::getView(int index)
