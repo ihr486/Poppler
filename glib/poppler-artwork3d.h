@@ -1,6 +1,6 @@
 /* poppler-artwork3d.h: glib interface to Artwork3D
  *
- * Copyright (C) 2016 Hiroka Ihara <ihara_h@live.jp>
+ * Copyright (C) 2016,2017 Hiroka Ihara <ihara_h@live.jp>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,6 +104,8 @@ struct _PopplerView3D
   PopplerLightingScheme3D lighting;
 };
 
+typedef struct _PopplerByteStream PopplerByteStream;
+
 #define POPPLER_TYPE_VIEW3D       (poppler_view3d_get_type ())
 #define POPPLER_VIEW3D(obj)       (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_VIEW3D, PopplerView3D))
 #define POPPLER_IS_VIEW3D         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_VIEW3D))
@@ -111,6 +113,10 @@ struct _PopplerView3D
 #define POPPLER_TYPE_ARTWORK3D    (poppler_artwork3d_get_type ())
 #define POPPLER_ARTWORK3D(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_ARTWORK3D, PopplerArtwork3D))
 #define POPPLER_IS_ARTWORK3D(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_ARTWORK3D))
+
+#define POPPLER_TYPE_BYTESTREAM   (poppler_bytestream_get_type ())
+#define POPPLER_BYTESTREAM(obj)   (G_TYPE_CHECK_INSTANCE_CAST ((obj), POPPLER_TYPE_BYTESTREAM, PopplerByteStream))
+#define POPPLER_IS_BYTESTREAM(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), POPPLER_TYPE_BYTESTREAM))
 
 typedef gboolean (*PopplerArtwork3DSaveFunc) (const gchar *buf,
                                               gsize count,
@@ -120,18 +126,22 @@ typedef gboolean (*PopplerArtwork3DSaveFunc) (const gchar *buf,
 GType    poppler_view3d_get_type            (void) G_GNUC_CONST;
 
 GType    poppler_artwork3d_get_type         (void) G_GNUC_CONST;
-gboolean poppler_artwork3d_save_to_file     (PopplerArtwork3D *artwork3d,
+/*gboolean poppler_artwork3d_save_to_file     (PopplerArtwork3D *artwork3d,
                                              const char *filename,
                                              GError **error);
 gboolean poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
                                              PopplerArtwork3DSaveFunc save_func,
                                              gpointer user_data,
-                                             GError **error);
-PopplerView3D *poppler_artwor3d_get_first_view (PopplerArtwork3D *artwork3d);
+                                             GError **error);*/
+PopplerByteStream *poppler_artwork3d_get_stream (PopplerArtwork3D *artwork3d);
+PopplerView3D *poppler_artwork3d_get_first_view (PopplerArtwork3D *artwork3d);
 PopplerView3D *poppler_artwork3d_get_last_view (PopplerArtwork3D *artwork3d);
 PopplerView3D *poppler_artwork3d_get_default_view (PopplerArtwork3D *artwork3d);
 PopplerView3D *poppler_artwork3d_get_view_by_array_index (PopplerArtwork3D *artwork3d, int index);
 PopplerView3D *poppler_artwork3d_get_view_by_internal_name (PopplerArtwork3D *artwork3d, const char *name);
+
+int poppler_bytestream_get_char (PopplerByteStream *stream);
+int poppler_bytestream_get_chars (int nchars, void *buf);
 
 G_END_DECLS
 

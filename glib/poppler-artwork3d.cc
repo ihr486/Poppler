@@ -32,6 +32,13 @@ struct _PopplerArtwork3D
   Artwork3D *artwork;
 };
 
+struct _PopplerByteStream
+{
+  GObject parent_instance;
+
+  Stream *stream;
+};
+
 struct _PopplerArtwork3DClass
 {
   GObjectClass parent_class;
@@ -44,8 +51,16 @@ struct _PopplerView3DClass
   GObjectClass parent_class;
 };
 
+typedef struct _PopplerByteStreamClass PopplerByteStreamClass;
+
+struct _PopplerByteStreamClass
+{
+  GObjectClass parent_class;
+};
+
 G_DEFINE_TYPE (PopplerArtwork3D, poppler_artwork3d, G_TYPE_OBJECT);
 G_DEFINE_TYPE (PopplerView3D, poppler_view3d, G_TYPE_OBJECT);
+G_DEFINE_TYPE (PopplerByteStream, poppler_bytestream, G_TYPE_OBJECT);
 
 static void
 poppler_artwork3d_finalize (GObject *object)
@@ -93,6 +108,30 @@ poppler_view3d_init (PopplerView3D *view3d)
 {
 }
 
+static void
+poppler_bytestream_finalize (GObject *object)
+{
+  PopplerByteStream *stream = POPPLER_BYTESTREAM (object);
+
+  stream->stream->close();
+
+  G_OBJECT_CLASS (poppler_bytestream_parent_class)->finalize (object);
+}
+
+static void
+poppler_bytestream_class_init (PopplerByteStreamClass *klass)
+{
+  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+  gobject_class->finalize = poppler_bytestream_finalize;
+}
+
+static void
+poppler_bytestream_init (PopplerByteStream *stream)
+{
+  stream->stream->reset();
+}
+
 PopplerArtwork3D *
 _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
 {
@@ -105,6 +144,20 @@ _poppler_artwork3d_new (Artwork3D *poppler_artwork3d)
   artwork3d->artwork = poppler_artwork3d;
 
   return artwork3d;
+}
+
+PopplerByteStream *
+_poppler_bytestream_new (Stream *poppler_stream)
+{
+  PopplerByteStream *stream;
+
+  g_assert (poppler_stream != NULL);
+
+  stream = POPPLER_BYTESTREAM (g_object_new (POPPLER_TYPE_BYTESTREAM, NULL));
+
+  stream->stream = poppler_stream;
+
+  return stream;
 }
 
 PopplerView3D *
@@ -231,7 +284,27 @@ poppler_artwork3d_get_view_by_array_index (PopplerArtwork3D *artwork3d, int inde
   return _poppler_view3d_new (artwork3d->artwork->getView(index));
 }
 
-#define BUF_SIZE (1024)
+PopplerByteStream *
+poppler_artwork3d_get_stream (PopplerArtwork3D *artwork3d)
+{
+  g_assert (artwork3d != NULL);
+
+  return _poppler_bytestream_new (artwork3d->artwork->getStream());
+}
+
+int
+poppler_bytestream_get_char (PopplerByteStream *stream)
+{
+  return stream->stream->getChar ();
+}
+
+int
+poppler_bytestream_get_chars (PopplerByteStream *stream, int nchars, void *buf)
+{
+  return stream->stream->doGetChars (nchars, (Guchar *)buf);
+}
+
+/*#define BUF_SIZE (1024)
 
 gboolean
 poppler_artwork3d_save_to_callback (PopplerArtwork3D *artwork3d,
@@ -327,4 +400,4 @@ poppler_artwork3d_save_to_file (PopplerArtwork3D *artwork3d,
   }
 
   return result;
-}
+}*/
